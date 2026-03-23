@@ -1,0 +1,130 @@
+openapi: "3.0.3"
+info:
+  title: Google Stitch
+  description: AI-powered UI design tool by Google Labs
+  version: "1.0.0"
+servers:
+  - url: https://stitch.googleapis.com/mcp
+paths:
+  /projects:
+    get:
+      operationId: list_projects
+      summary: List all Stitch projects
+      tags: [projects]
+      responses:
+        "200": { description: OK }
+    post:
+      operationId: create_project
+      summary: Create a new project
+      tags: [projects]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string, description: "Project title" }
+              required: [title]
+      responses:
+        "200": { description: Created }
+  /projects/{projectId}:
+    get:
+      operationId: get_project
+      summary: Get a project by ID
+      tags: [projects]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: OK }
+    delete:
+      operationId: delete_project
+      summary: Delete a project
+      tags: [projects]
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: Deleted }
+  /screens/generate:
+    post:
+      operationId: generate_screen_from_text
+      summary: Generate a UI screen from a text prompt
+      tags: [screens]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt: { type: string, description: "Design prompt (e.g. 'A login page with email and password')" }
+                projectId: { type: string, description: "Project ID to add the screen to" }
+                model: { type: string, description: "Model: GEMINI_3_PRO or GEMINI_3_FLASH" }
+              required: [prompt, projectId]
+      responses:
+        "200": { description: Generated screen }
+  /screens:
+    get:
+      operationId: list_screens
+      summary: List screens in a project
+      tags: [screens]
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: OK }
+  /screens/{screenId}:
+    get:
+      operationId: get_screen
+      summary: Get a specific screen with HTML and image
+      tags: [screens]
+      parameters:
+        - name: screenId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: projectId
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: OK }
+  /design-systems:
+    get:
+      operationId: list_design_systems
+      summary: List design systems
+      tags: [design-systems]
+      responses:
+        "200": { description: OK }
+    post:
+      operationId: create_design_system
+      summary: Create a design system
+      tags: [design-systems]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string, description: "Design system name" }
+                description: { type: string, description: "Design system description" }
+              required: [name]
+      responses:
+        "200": { description: Created }
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-Goog-Api-Key
+security:
+  - apiKey: []
