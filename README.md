@@ -4,7 +4,7 @@
 
 **OpenAPI in, CLI out — built for AI agents.**
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Bun](https://img.shields.io/badge/bun-%3E%3D1.2-14151a?logo=bun&logoColor=white)](https://bun.sh) [![TypeScript](https://img.shields.io/badge/typescript-5.9-3178c6?logo=typescript&logoColor=white)](https://typescriptlang.org) [![Build](https://img.shields.io/badge/build-0.37MB%20%C2%B7%207ms-22c55e)]()
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE) [![Bun](https://img.shields.io/badge/bun-%3E%3D1.2-14151a?logo=bun&logoColor=white)](https://bun.sh) [![TypeScript](https://img.shields.io/badge/typescript-5.9-3178c6?logo=typescript&logoColor=white)](https://typescriptlang.org) [![Build](https://img.shields.io/badge/build-0.37MB%20%C2%B7%207ms-22c55e)]()
 
 [Quick Start](#quick-start) · [Why CLI?](#why-cli-over-mcp) · [Commands](#commands) · [Agent Integration](#agent-integration) · [Contributing](#contributing)
 
@@ -245,8 +245,8 @@ Single `package.json`. Single `tsconfig.json`. One `bun build` → 0.37 MB binar
 ## Development
 
 ```bash
-git clone https://github.com/fusengine/fusecliapi.git
-cd fusecliapi
+git clone https://github.com/fusengine/fusecli.git
+cd fusecli
 
 bun install          # Install dependencies
 bun run build        # Build binary (0.37 MB, 7ms)
@@ -293,4 +293,4 @@ bun run lint         # Biome check
 
 ## License
 
-MIT — [Fusengine](https://fusengine.ch)
+Apache 2.0 — [Fusengine](https://fusengine.ch)
