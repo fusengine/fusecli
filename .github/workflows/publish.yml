@@ -53,6 +53,12 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Sync version from tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          cd packages/cli
+          node -e "const p=require('./package.json'); p.version='$VERSION'; require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n')"
+
       - name: Build
         run: bun run build
         working-directory: packages/cli
@@ -87,6 +93,12 @@ jobs:
 
       - name: Install dependencies
         run: bun install
+
+      - name: Sync version from tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          cd packages/cli
+          node -e "const p=require('./package.json'); p.version='$VERSION'; require('fs').writeFileSync('package.json', JSON.stringify(p, null, 2)+'\n')"
 
       - name: Build
         run: bun run build

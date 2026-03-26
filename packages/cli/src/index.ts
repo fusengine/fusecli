@@ -17,6 +17,7 @@ import { registerList } from "@/commands/list.js";
 import { registerRemove } from "@/commands/remove.js";
 import { registerRun } from "@/commands/run.js";
 import { registerSearch } from "@/commands/search.js";
+import { registerUnlink } from "@/commands/unlink.js";
 import { registerUpdate } from "@/commands/update.js";
 import { cliPlugin } from "@/generators/cli-plugin.js";
 import { skillPlugin } from "@/generators/skill-plugin.js";
@@ -45,6 +46,7 @@ registerList(program);
 registerDoctor(program);
 registerUpdate(program);
 registerRemove(program);
+registerUnlink(program);
 registerExplore(program);
 
 program.parse();
