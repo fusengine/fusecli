@@ -1,6 +1,6 @@
 {
 	"name": "@fusengine/fusecli",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "Generate production-ready CLIs from any OpenAPI spec — built for AI agents",
 	"type": "module",
 	"license": "Apache-2.0",

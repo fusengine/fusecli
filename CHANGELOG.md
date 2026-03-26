@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 26-03-2026
+
+### Fixed
+
+- Replace nested backticks with string concatenation in output template verbose mode
+
 ## [1.0.6] - 26-03-2026
 
 ### Fixed
