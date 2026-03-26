@@ -30,13 +30,25 @@ export function groupEndpoints(endpoints: ParsedEndpoint[]): Resource[] {
       method: ep.method as Action["method"],
       path: ep.path,
       params: [...ep.parameters.map(toParam), ...(ep.body?.properties ?? []).map(toBodyParam)],
-      body: ep.body ? { contentType: ep.body.contentType, schemaRef: "", required: ep.body.required } : undefined,
+      body: ep.body
+        ? { contentType: ep.body.contentType, schemaRef: "", required: ep.body.required }
+        : undefined,
       responses: ep.responses.map(toResponse),
       tags: ep.tags,
     }));
     const slug = slugify(name);
-    const desc = eps.map((e) => e.summary).filter(Boolean).join(", ") || undefined;
-    resources.push({ name: slug, displayName: name, description: desc, basePath: commonBase(eps.map((e) => e.path)), actions });
+    const desc =
+      eps
+        .map((e) => e.summary)
+        .filter(Boolean)
+        .join(", ") || undefined;
+    resources.push({
+      name: slug,
+      displayName: name,
+      description: desc,
+      basePath: commonBase(eps.map((e) => e.path)),
+      actions,
+    });
   }
   return resources;
 }
@@ -57,20 +69,32 @@ function commonBase(paths: string[]): string {
 }
 
 /** Convert ParsedParam to IR Param */
-function toParam(p: { name: string; in: string; required: boolean; type?: string; description?: string }): Param {
+function toParam(p: {
+  name: string;
+  in: string;
+  required: boolean;
+  type?: string;
+  description?: string;
+}): Param {
   return {
-    name: p.name, cliName: p.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
-    location: p.in as Param["location"], type: (p.type ?? "string") as Param["type"],
-    required: p.required, description: p.description,
+    name: p.name,
+    cliName: p.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
+    location: p.in as Param["location"],
+    type: (p.type ?? "string") as Param["type"],
+    required: p.required,
+    description: p.description,
   };
 }
 
 /** Convert a body schema field to an IR Param with location "body" */
 function toBodyParam(f: ParsedBodyField): Param {
   return {
-    name: f.name, cliName: f.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
-    location: "body", type: (f.type ?? "string") as Param["type"],
-    required: f.required, description: f.description,
+    name: f.name,
+    cliName: f.name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
+    location: "body",
+    type: (f.type ?? "string") as Param["type"],
+    required: f.required,
+    description: f.description,
   };
 }
 

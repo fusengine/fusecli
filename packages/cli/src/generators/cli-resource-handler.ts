@@ -5,7 +5,52 @@
 
 import type { Param } from "@/ir/types.js";
 
-const RESERVED = new Set(["break","case","catch","continue","debugger","default","delete","do","else","finally","for","function","if","in","instanceof","new","return","switch","this","throw","try","typeof","var","void","while","with","class","const","enum","export","extends","import","super","implements","interface","let","package","private","protected","public","static","yield","await","async"]);
+const RESERVED = new Set([
+  "break",
+  "case",
+  "catch",
+  "continue",
+  "debugger",
+  "default",
+  "delete",
+  "do",
+  "else",
+  "finally",
+  "for",
+  "function",
+  "if",
+  "in",
+  "instanceof",
+  "new",
+  "return",
+  "switch",
+  "this",
+  "throw",
+  "try",
+  "typeof",
+  "var",
+  "void",
+  "while",
+  "with",
+  "class",
+  "const",
+  "enum",
+  "export",
+  "extends",
+  "import",
+  "super",
+  "implements",
+  "interface",
+  "let",
+  "package",
+  "private",
+  "protected",
+  "public",
+  "static",
+  "yield",
+  "await",
+  "async",
+]);
 
 /**
  * Escape a string for safe embedding in a double-quoted TypeScript string literal.
@@ -34,14 +79,21 @@ export function buildActionHandler(
   const qP = optP.filter((p) => p.location === "query");
   const bP = optP.filter((p) => p.location === "body");
   const callParts = [`method: "${action.method}"`, `path: \`${urlPath}\``];
-  if (bP.length) callParts.push(`body: { ${bP.map((p) => RESERVED.has(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name).join(", ")} }`);
+  if (bP.length)
+    callParts.push(
+      `body: { ${bP.map((p) => (RESERVED.has(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ")} }`,
+    );
   if (qP.length) callParts.push(`query: { ${qP.map((p) => p.name).join(", ")} }`);
   const call = `{ ${callParts.join(", ")} }`;
   const params = pNames ? `${pNames}, opts` : "opts";
   const destructured = [...bP, ...qP].map((p) => safeName(p.name));
-  const renames = [...bP, ...qP].filter((p) => RESERVED.has(p.name)).map((p) => `${p.name}: ${safeName(p.name)}`);
+  const renames = [...bP, ...qP]
+    .filter((p) => RESERVED.has(p.name))
+    .map((p) => `${p.name}: ${safeName(p.name)}`);
   const normals = [...bP, ...qP].filter((p) => !RESERVED.has(p.name)).map((p) => p.name);
-  const destructLine = destructured.length ? `const { ${[...normals, ...renames].join(", ")} } = opts; ` : "";
+  const destructLine = destructured.length
+    ? `const { ${[...normals, ...renames].join(", ")} } = opts; `
+    : "";
   return [
     `    .action(async (${params}) => {`,
     `      try { ${destructLine}const d = await apiCall(${call}); render(d, program.opts()); }`,

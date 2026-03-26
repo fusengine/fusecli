@@ -69,8 +69,8 @@ describe("E2E: Petstore full pipeline", () => {
   it("Step 7: mock skill-plugin generates SKILL.md", () => {
     const files = mockSkillPlugin.generate(ir, { outputDir: OUT });
     expect(files).toHaveLength(1);
-    expect(files[0]!.content).toContain("# Petstore CLI");
-    expect(files[0]!.content).toContain("GET /pets");
+    expect(files[0]?.content).toContain("# Petstore CLI");
+    expect(files[0]?.content).toContain("GET /pets");
   });
 
   it("Step 8: v2 spec also produces valid IR", async () => {

@@ -68,7 +68,12 @@ function extractAuth(spec: Record<string, unknown>): AuthConfig {
   if (first.type === "oauth2") {
     const flows = first.flows as Record<string, Record<string, string>> | undefined;
     const flow = flows?.authorizationCode ?? flows?.clientCredentials ?? flows?.implicit;
-    return { type: "oauth2", header: "Authorization", tokenUrl: flow?.tokenUrl, authorizationUrl: flow?.authorizationUrl };
+    return {
+      type: "oauth2",
+      header: "Authorization",
+      tokenUrl: flow?.tokenUrl,
+      authorizationUrl: flow?.authorizationUrl,
+    };
   }
   return { type: "none", header: "" };
 }

@@ -46,19 +46,19 @@ describe("skillPlugin SKILL.md generation", () => {
   it("generates exactly one SKILL.md file", () => {
     const files = skillPlugin.generate(createTestIR(), { outputDir: "./out" });
     expect(files).toHaveLength(1);
-    expect(files[0]!.path).toBe("./out/SKILL.md");
+    expect(files[0]?.path).toBe("./out/SKILL.md");
   });
 
   it("includes title and base URL in content", () => {
     const files = skillPlugin.generate(createTestIR(), { outputDir: "./out" });
-    const md = files[0]!.content;
+    const md = files[0]?.content;
     expect(md).toContain("PetStore");
     expect(md).toContain("https://api.petstore.io/v1");
   });
 
   it("lists resources and actions", () => {
     const files = skillPlugin.generate(createTestIR(), { outputDir: "./out" });
-    const md = files[0]!.content;
+    const md = files[0]?.content;
     expect(md).toContain("Pets");
     expect(md).toContain("list");
     expect(md).toContain("GET /pets");

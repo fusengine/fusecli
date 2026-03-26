@@ -12,7 +12,9 @@ import type { IR } from "@/ir/types.js";
  */
 export function generateAuthCommand(ir: IR): string {
   const isOAuth = ir.auth.type === "oauth2";
-  const loginCmd = isOAuth ? buildOAuthLogin(ir.auth.authorizationUrl ?? "", ir.auth.tokenUrl ?? "") : "";
+  const loginCmd = isOAuth
+    ? buildOAuthLogin(ir.auth.authorizationUrl ?? "", ir.auth.tokenUrl ?? "")
+    : "";
   return `import type { Command } from "commander";
 import { readCredential, writeCredential, deleteCredential, redactCredential } from "../lib/auth.js";
 import { render } from "../lib/output.js";

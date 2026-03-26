@@ -65,8 +65,8 @@ describe("groupEndpoints", () => {
     const { endpoints } = await parseSpec(`${FIXTURES}/petstore-v3.yaml`);
     const resources = groupEndpoints(endpoints);
     expect(resources.length).toBeGreaterThanOrEqual(1);
-    expect(resources[0]!.name).toBe("pets");
-    expect(resources[0]!.displayName).toBe("pets");
+    expect(resources[0]?.name).toBe("pets");
+    expect(resources[0]?.displayName).toBe("pets");
   });
 });
 

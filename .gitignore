@@ -5,3 +5,6 @@ dist/
 .DS_Store
 .cartographer
 .claude
+apps/memory-server
+docker-compose.yml
+packages/memory
