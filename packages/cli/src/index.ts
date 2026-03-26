@@ -21,14 +21,15 @@ import { registerUnlink } from "@/commands/unlink.js";
 import { registerUpdate } from "@/commands/update.js";
 import { cliPlugin } from "@/generators/cli-plugin.js";
 import { skillPlugin } from "@/generators/skill-plugin.js";
+import pkg from "../package.json";
 
-console.log(`${pc.bold(pc.cyan("fusecli"))}${pc.dim(" v0.1.0")}`);
+console.log(`${pc.bold(pc.cyan("fusecli"))}${pc.dim(` v${pkg.version}`)}`);
 console.log(pc.dim("Any API. One CLI. Every Agent."));
 console.log(`${pc.magenta("powered by fusengine")}\n`);
 
 const program = new Command()
   .name("fusecli")
-  .version("0.1.0")
+  .version(pkg.version)
   .description("Generate production-ready CLIs from OpenAPI specs")
   .configureHelp({
     subcommandTerm: (cmd) => pc.cyan(cmd.name()) + (cmd.usage() ? ` ${pc.dim(cmd.usage())}` : ""),
