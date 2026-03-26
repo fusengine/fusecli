@@ -31,14 +31,22 @@ npm install -g github:fusengine/fusecli
 
 ```bash
 # Generate a CLI from any OpenAPI spec
-fusecli create exa --openapi https://raw.githubusercontent.com/exa-labs/openapi-spec/refs/heads/master/exa-openapi-spec.yaml
+fusecli create exa \
+  --openapi https://raw.githubusercontent.com/exa-labs/openapi-spec/refs/heads/master/exa-openapi-spec.yaml \
+  --token "your-exa-api-key"
 
 # Build the binary
 fusecli bundle exa
 
-# Use it
-exa-cli auth set "your-api-key"
-exa-cli search --query "fusengine" --num-results 3 --json
+# Link to PATH + AI agents
+fusecli link exa
+
+# Set your API key and search
+exa-cli auth set "your-exa-api-key"
+exa-cli search \
+  --query "fusengine" \
+  --num-results 3 \
+  --json
 ```
 
 ## Commands

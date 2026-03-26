@@ -25,14 +25,22 @@
 bun add -g @fusengine/fusecli
 
 # Generate a CLI from any OpenAPI spec
-fusecli create exa --openapi https://raw.githubusercontent.com/exa-labs/openapi-spec/refs/heads/master/exa-openapi-spec.yaml
+fusecli create exa \
+  --openapi https://raw.githubusercontent.com/exa-labs/openapi-spec/refs/heads/master/exa-openapi-spec.yaml \
+  --token "your-exa-api-key"
 
 # Build the binary
 fusecli bundle exa
 
+# Link to PATH + AI agents
+fusecli link exa
+
 # Set your API key and search
 exa-cli auth set "your-exa-api-key"
-exa-cli search --query "fusengine" --num-results 3 --json
+exa-cli search \
+  --query "fusengine" \
+  --num-results 3 \
+  --json
 ```
 
 **Real output** (tested March 2026):
@@ -102,6 +110,9 @@ bun add -g @fusengine/fusecli
 
 # npm
 npm install -g @fusengine/fusecli
+
+# GitHub (direct)
+npm install -g github:fusengine/fusecli
 ```
 
 **Requirement**: [Bun](https://bun.sh) 1.2+
