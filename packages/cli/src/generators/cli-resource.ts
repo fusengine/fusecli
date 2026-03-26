@@ -8,9 +8,9 @@ import { toPascal } from "@/generators/gen-utils.js";
 import type { Action, Resource } from "@/ir/types.js";
 import {
   buildActionHandler,
+  buildCoercionArg,
   buildFlag,
   escapeStr,
-  needsNumberCoerce,
 } from "./cli-resource-handler.js";
 
 /**
@@ -60,7 +60,7 @@ function buildFlatAction(action: Action): string {
     : [`  cmd`];
   for (const p of optP) {
     lines.push(
-      `    .option("${buildFlag(p)}", "${escapeStr(p.description ?? p.name)}"${needsNumberCoerce(p) ? ", Number" : ""})`,
+      `    .option("${buildFlag(p)}", "${escapeStr(p.description ?? p.name)}"${buildCoercionArg(p)})`,
     );
   }
   lines.push(...buildActionHandler(action, pathP, optP));
@@ -82,7 +82,7 @@ function buildSubAction(action: Action): string {
   const lines = [`  cmd.command(${cmdStr})`, `    .description("${desc}")`];
   for (const p of optP) {
     lines.push(
-      `    .option("${buildFlag(p)}", "${escapeStr(p.description ?? p.name)}"${needsNumberCoerce(p) ? ", Number" : ""})`,
+      `    .option("${buildFlag(p)}", "${escapeStr(p.description ?? p.name)}"${buildCoercionArg(p)})`,
     );
   }
   lines.push(...buildActionHandler(action, pathP, optP));

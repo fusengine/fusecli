@@ -4,53 +4,7 @@
  */
 
 import type { Param } from "@/ir/types.js";
-
-const RESERVED = new Set([
-  "break",
-  "case",
-  "catch",
-  "continue",
-  "debugger",
-  "default",
-  "delete",
-  "do",
-  "else",
-  "finally",
-  "for",
-  "function",
-  "if",
-  "in",
-  "instanceof",
-  "new",
-  "return",
-  "switch",
-  "this",
-  "throw",
-  "try",
-  "typeof",
-  "var",
-  "void",
-  "while",
-  "with",
-  "class",
-  "const",
-  "enum",
-  "export",
-  "extends",
-  "import",
-  "super",
-  "implements",
-  "interface",
-  "let",
-  "package",
-  "private",
-  "protected",
-  "public",
-  "static",
-  "yield",
-  "await",
-  "async",
-]);
+import { isReserved, safeName } from "./cli-reserved-words.js";
 
 /**
  * Escape a string for safe embedding in a double-quoted TypeScript string literal.
@@ -81,17 +35,16 @@ export function buildActionHandler(
   const callParts = [`method: "${action.method}"`, `path: \`${urlPath}\``];
   if (bP.length)
     callParts.push(
-      `body: { ${bP.map((p) => (RESERVED.has(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ")} }`,
+      `body: { ${bP.map((p) => (isReserved(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ")} }`,
     );
   if (qP.length) callParts.push(`query: { ${qP.map((p) => p.name).join(", ")} }`);
   const call = `{ ${callParts.join(", ")} }`;
   const params = pNames ? `${pNames}, opts` : "opts";
-  const destructured = [...bP, ...qP].map((p) => safeName(p.name));
   const renames = [...bP, ...qP]
-    .filter((p) => RESERVED.has(p.name))
+    .filter((p) => isReserved(p.name))
     .map((p) => `${p.name}: ${safeName(p.name)}`);
-  const normals = [...bP, ...qP].filter((p) => !RESERVED.has(p.name)).map((p) => p.name);
-  const destructLine = destructured.length
+  const normals = [...bP, ...qP].filter((p) => !isReserved(p.name)).map((p) => p.name);
+  const destructLine = [...normals, ...renames].length
     ? `const { ${[...normals, ...renames].join(", ")} } = opts; `
     : "";
   return [
@@ -117,7 +70,16 @@ export function needsNumberCoerce(p: Param): boolean {
   return p.type === "integer" || p.type === "number";
 }
 
-/** Prefix reserved JS words to make them valid identifiers. */
-function safeName(name: string): string {
-  return RESERVED.has(name) ? `_${name}` : name;
+/**
+ * Build the coercion argument for a Commander .option() call.
+ * Returns the trailing argument string (e.g. `, Number`) or empty string if none needed.
+ * @param p - The parameter definition.
+ * @returns Coercion argument string fragment for Commander .option().
+ */
+export function buildCoercionArg(p: Param): string {
+  if (p.type === "integer" || p.type === "number") return ", Number";
+  if (p.type === "array")
+    return ', (v: string) => v.split(",").map((s: string) => s.trim()).filter(Boolean)';
+  if (p.type === "object") return ", (v: string) => JSON.parse(v)";
+  return "";
 }

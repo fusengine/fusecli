@@ -12,9 +12,9 @@ import { slugify } from "@/lib/utils.js";
  * @param ir - The intermediate representation.
  * @returns TypeScript source code string.
  */
-export function generateEntryPoint(ir: IR): string {
-  const appName = slugify(ir.meta.title);
-  const binName = `${appName}-cli`;
+export function generateEntryPoint(ir: IR, appName?: string): string {
+  const name = appName ?? slugify(ir.meta.title);
+  const binName = `${name}-cli`;
   const resources = ir.resources.map((r) => r.name);
 
   const imports = [

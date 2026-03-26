@@ -24,10 +24,10 @@ export const cliPlugin: IPlugin = {
 
   generate(ir: IR, options: PluginOptions): GeneratedFile[] {
     const dir = options.outputDir;
-    const appName = slugify(ir.meta.title);
+    const appName = options.appName ?? slugify(ir.meta.title);
     const files: GeneratedFile[] = [
-      { path: `${dir}/src/index.ts`, content: generateEntryPoint(ir) },
-      { path: `${dir}/package.json`, content: generatePackageJson(ir) },
+      { path: `${dir}/src/index.ts`, content: generateEntryPoint(ir, appName) },
+      { path: `${dir}/package.json`, content: generatePackageJson(ir, appName) },
       { path: `${dir}/src/commands/auth.ts`, content: generateAuthCommand(ir) },
       { path: `${dir}/src/lib/client.ts`, content: generateClientCode(ir) },
       { path: `${dir}/src/lib/auth.ts`, content: emitAuthTemplate(ir) },

@@ -48,7 +48,7 @@ export function registerCreate(program: Command, plugins: IPlugin[]): void {
       mkdirSync(outDir, { recursive: true });
 
       for (const plugin of plugins) {
-        const files = plugin.generate(ir, { outputDir: outDir });
+        const files = plugin.generate(ir, { outputDir: outDir, appName: slug });
         for (const file of files) {
           mkdirSync(join(file.path, ".."), { recursive: true });
           writeFileSync(file.path, file.content);

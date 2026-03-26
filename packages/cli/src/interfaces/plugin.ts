@@ -9,6 +9,8 @@ import type { IR } from "@/ir/types.js";
 export interface PluginOptions {
   /** Output directory for generated files. */
   outputDir: string;
+  /** Slugified application name (e.g. "my-app"). */
+  appName?: string;
 }
 
 /** A file produced by a plugin. */
