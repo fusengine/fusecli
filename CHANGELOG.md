@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 26-03-2026
+
+### Added
+
+- Fix plain text output for nested objects (no more [object Object])
+- Verbose mode with > prefix for highlights/summary in generated CLIs
+- `fusecli unlink` command (reverse of link — removes PATH and SKILL.md symlinks)
+- Auto-sync package.json version from git tag in publish workflow
+
 ## [1.0.4] - 26-03-2026
 
 ### Documentation
