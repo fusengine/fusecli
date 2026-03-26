@@ -23,10 +23,27 @@ export function extractSchemaProperties(
   const props = schema.properties as Record<string, Record<string, unknown>> | undefined;
   if (!props) return undefined;
   const requiredFields = (schema.required ?? []) as string[];
-  return Object.entries(props).map(([name, def]) => ({
-    name,
-    type: (def.type as string) ?? "string",
-    required: requiredFields.includes(name),
-    description: def.description as string | undefined,
-  }));
+  const fields: ParsedBodyField[] = [];
+  for (const [name, def] of Object.entries(props)) {
+    const childProps = def.properties as Record<string, Record<string, unknown>> | undefined;
+    if (def.type === "object" && childProps) {
+      const childRequired = (def.required ?? []) as string[];
+      for (const [childName, childDef] of Object.entries(childProps)) {
+        fields.push({
+          name: `${name}.${childName}`,
+          type: (childDef.type as string) ?? "string",
+          required: childRequired.includes(childName),
+          description: childDef.description as string | undefined,
+        });
+      }
+    } else {
+      fields.push({
+        name,
+        type: (def.type as string) ?? "string",
+        required: requiredFields.includes(name),
+        description: def.description as string | undefined,
+      });
+    }
+  }
+  return fields.length > 0 ? fields : undefined;
 }

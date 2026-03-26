@@ -4,6 +4,7 @@
  */
 
 import type { Param } from "@/ir/types.js";
+import { buildNestedBody, hasDots, optKey } from "./cli-body-builder.js";
 import { isReserved, safeName } from "./cli-reserved-words.js";
 
 /**
@@ -32,24 +33,31 @@ export function buildActionHandler(
   const urlPath = action.path.replace(/\{(\w+)\}/g, "${$1}");
   const qP = optP.filter((p) => p.location === "query");
   const bP = optP.filter((p) => p.location === "body");
+  const nested = hasDots(bP);
   const callParts = [`method: "${action.method}"`, `path: \`${urlPath}\``];
-  if (bP.length)
-    callParts.push(
-      `body: { ${bP.map((p) => (isReserved(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ")} }`,
-    );
+  if (bP.length) {
+    if (nested) {
+      callParts.push("body");
+    } else {
+      const fields = bP.map((p) => (isReserved(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ");
+      callParts.push(`body: { ${fields} }`);
+    }
+  }
   if (qP.length) callParts.push(`query: { ${qP.map((p) => p.name).join(", ")} }`);
   const call = `{ ${callParts.join(", ")} }`;
   const params = pNames ? `${pNames}, opts` : "opts";
-  const renames = [...bP, ...qP]
-    .filter((p) => isReserved(p.name))
-    .map((p) => `${p.name}: ${safeName(p.name)}`);
-  const normals = [...bP, ...qP].filter((p) => !isReserved(p.name)).map((p) => p.name);
-  const destructLine = [...normals, ...renames].length
-    ? `const { ${[...normals, ...renames].join(", ")} } = opts; `
-    : "";
+  const allOpts = [...bP, ...qP];
+  const renames = allOpts.filter((p) => optKey(p) !== p.name || isReserved(p.name));
+  const normals = allOpts.filter((p) => optKey(p) === p.name && !isReserved(p.name));
+  const destructParts = [
+    ...normals.map((p) => p.name),
+    ...renames.map((p) => `"${optKey(p)}": ${isReserved(optKey(p)) ? safeName(optKey(p)) : optKey(p)}`),
+  ];
+  const destructLine = destructParts.length ? `const { ${destructParts.join(", ")} } = opts; ` : "";
+  const bodyLine = nested ? `${buildNestedBody(bP)} ` : "";
   return [
     `    .action(async (${params}) => {`,
-    `      try { ${destructLine}const d = await apiCall(${call}); render(d, program.opts()); }`,
+    `      try { ${destructLine}${bodyLine}const d = await apiCall(${call}); render(d, program.opts()); }`,
     `      catch (e) { catchError(e); }`,
     `    });`,
   ];
@@ -57,11 +65,12 @@ export function buildActionHandler(
 
 /**
  * Build CLI flag string for a param using cliName (kebab-case).
+ * Dots in names are converted to dashes for valid CLI flags.
  * @param p - The parameter definition.
  * @returns Flag string for Commander .option().
  */
 export function buildFlag(p: Param): string {
-  const key = p.cliName ?? p.name;
+  const key = (p.cliName ?? p.name).replace(/\./g, "-");
   return p.required ? `--${key} <${key}>` : `--${key} [${key}]`;
 }
 
