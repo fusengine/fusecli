@@ -1,10 +1,10 @@
 <div align="center">
 
-# @fusecli/api
+# @fusengine/fusecli
 
 **OpenAPI in, CLI out — built for AI agents.**
 
-[![npm](https://img.shields.io/npm/v/@fusecli/api)](https://www.npmjs.com/package/@fusecli/api)
+[![npm](https://img.shields.io/npm/v/@fusengine/fusecli)](https://www.npmjs.com/package/@fusengine/fusecli)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](../../LICENSE)
 [![Bun](https://img.shields.io/badge/bun-%3E%3D1.2-14151a?logo=bun&logoColor=white)](https://bun.sh)
 
@@ -18,10 +18,10 @@ Generate production-ready CLI tools from any OpenAPI spec. Every AI agent has a 
 
 ```bash
 # npm
-npm install -g @fusecli/api
+npm install -g @fusengine/fusecli
 
 # bun (recommended)
-bun add -g @fusecli/api
+bun add -g @fusengine/fusecli
 
 # GitHub
 npm install -g github:fusengine/fusecli

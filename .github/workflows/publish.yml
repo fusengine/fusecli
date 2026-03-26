@@ -1,4 +1,4 @@
-name: Publish @fusecli/api
+name: Publish @fusengine/fusecli
 
 on:
   push:
@@ -66,36 +66,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  publish-github:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://npm.pkg.github.com
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build
-        run: bun run build
-        working-directory: packages/cli
-
-      - name: Copy LICENSE
-        run: cp LICENSE packages/cli/LICENSE
-
-      - name: Publish to GitHub Packages
-        run: npm publish --access public
-        working-directory: packages/cli
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

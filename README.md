@@ -22,7 +22,7 @@
 
 ```bash
 # Install
-bun add -g @fusecli/api
+bun add -g @fusengine/fusecli
 
 # Generate a CLI from any OpenAPI spec
 fusecli create exa --openapi https://raw.githubusercontent.com/exa-labs/openapi-spec/refs/heads/master/exa-openapi-spec.yaml
@@ -98,10 +98,10 @@ Any API with an OpenAPI spec works. Local files and remote URLs supported.
 
 ```bash
 # Bun (recommended)
-bun add -g @fusecli/api
+bun add -g @fusengine/fusecli
 
 # npm
-npm install -g @fusecli/api
+npm install -g @fusengine/fusecli
 ```
 
 **Requirement**: [Bun](https://bun.sh) 1.2+

@@ -1,5 +1,5 @@
 {
-	"name": "@fusecli/api",
+	"name": "@fusengine/fusecli",
 	"version": "1.0.2",
 	"description": "Generate production-ready CLIs from any OpenAPI spec — built for AI agents",
 	"type": "module",
