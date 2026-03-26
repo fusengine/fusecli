@@ -39,7 +39,9 @@ export function buildActionHandler(
     if (nested) {
       callParts.push("body");
     } else {
-      const fields = bP.map((p) => (isReserved(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name)).join(", ");
+      const fields = bP
+        .map((p) => (isReserved(p.name) ? `${p.name}: ${safeName(p.name)}` : p.name))
+        .join(", ");
       callParts.push(`body: { ${fields} }`);
     }
   }
@@ -51,7 +53,9 @@ export function buildActionHandler(
   const normals = allOpts.filter((p) => optKey(p) === p.name && !isReserved(p.name));
   const destructParts = [
     ...normals.map((p) => p.name),
-    ...renames.map((p) => `"${optKey(p)}": ${isReserved(optKey(p)) ? safeName(optKey(p)) : optKey(p)}`),
+    ...renames.map(
+      (p) => `"${optKey(p)}": ${isReserved(optKey(p)) ? safeName(optKey(p)) : optKey(p)}`,
+    ),
   ];
   const destructLine = destructParts.length ? `const { ${destructParts.join(", ")} } = opts; ` : "";
   const bodyLine = nested ? `${buildNestedBody(bP)} ` : "";

@@ -14,7 +14,9 @@ const toKebab = (s: string) => s.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase
  * @example slugifyAction("research-controller-create-research", "research") => "create"
  */
 function slugifyAction(raw: string, resource: string): string {
-  let n = toKebab(raw).replace(/-?controller-?/g, "-").replace(/^-|-$/g, "");
+  let n = toKebab(raw)
+    .replace(/-?controller-?/g, "-")
+    .replace(/^-|-$/g, "");
   if (n.startsWith(`${resource}-`)) n = n.slice(resource.length + 1);
   if (n.endsWith(`-${resource}`)) n = n.slice(0, -(resource.length + 1));
   return n || raw;
@@ -27,7 +29,8 @@ function slugifyAction(raw: string, resource: string): string {
 export function groupEndpoints(endpoints: ParsedEndpoint[]): Resource[] {
   const groups = new Map<string, ParsedEndpoint[]>();
   for (const ep of endpoints) {
-    const key = ep.tags[0] ?? (ep.path.split("/").filter(Boolean)[0]?.replace(/[{}]/g, "") ?? "default");
+    const key =
+      ep.tags[0] ?? ep.path.split("/").filter(Boolean)[0]?.replace(/[{}]/g, "") ?? "default";
     const list = groups.get(key) ?? [];
     list.push(ep);
     groups.set(key, list);
@@ -41,14 +44,28 @@ export function groupEndpoints(endpoints: ParsedEndpoint[]): Resource[] {
       description: ep.summary,
       method: ep.method as Action["method"],
       path: ep.path,
-      params: [...ep.parameters.map(mapToParam), ...(ep.body?.properties ?? []).map(mapToBodyParam)],
-      body: ep.body ? { contentType: ep.body.contentType, schemaRef: "", required: ep.body.required } : undefined,
+      params: [
+        ...ep.parameters.map(mapToParam),
+        ...(ep.body?.properties ?? []).map(mapToBodyParam),
+      ],
+      body: ep.body
+        ? { contentType: ep.body.contentType, schemaRef: "", required: ep.body.required }
+        : undefined,
       responses: ep.responses.map(mapToResponse),
       tags: ep.tags,
     }));
-    const desc = eps.map((e) => e.summary).filter(Boolean).join(", ") || undefined;
-    resources.push({ name: resSlug, displayName: name, description: desc,
-      basePath: findCommonBase(eps.map((e) => e.path)), actions });
+    const desc =
+      eps
+        .map((e) => e.summary)
+        .filter(Boolean)
+        .join(", ") || undefined;
+    resources.push({
+      name: resSlug,
+      displayName: name,
+      description: desc,
+      basePath: findCommonBase(eps.map((e) => e.path)),
+      actions,
+    });
   }
   return resources;
 }
@@ -64,15 +81,33 @@ function findCommonBase(paths: string[]): string {
 }
 
 /** Convert a parsed parameter to an IR Param */
-function mapToParam(p: { name: string; in: string; required: boolean; type?: string; description?: string }): Param {
-  return { name: p.name, cliName: toKebab(p.name), location: p.in as Param["location"],
-    type: (p.type ?? "string") as Param["type"], required: p.required, description: p.description };
+function mapToParam(p: {
+  name: string;
+  in: string;
+  required: boolean;
+  type?: string;
+  description?: string;
+}): Param {
+  return {
+    name: p.name,
+    cliName: toKebab(p.name),
+    location: p.in as Param["location"],
+    type: (p.type ?? "string") as Param["type"],
+    required: p.required,
+    description: p.description,
+  };
 }
 
 /** Convert a body schema field to an IR Param with location "body" */
 function mapToBodyParam(f: ParsedBodyField): Param {
-  return { name: f.name, cliName: toKebab(f.name), location: "body",
-    type: (f.type ?? "string") as Param["type"], required: f.required, description: f.description };
+  return {
+    name: f.name,
+    cliName: toKebab(f.name),
+    location: "body",
+    type: (f.type ?? "string") as Param["type"],
+    required: f.required,
+    description: f.description,
+  };
 }
 
 /** Convert a parsed response to an IR ResponseDef */
