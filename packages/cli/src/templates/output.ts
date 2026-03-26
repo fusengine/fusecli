@@ -5,9 +5,8 @@
 
 /** Emit table and CSV source lines (used by emitOutputTemplate). */
 function emitTableLines(): string[] {
-  const bt = "`";
-  const n1 = `        if (Array.isArray(nv)) { for (const item of nv) console.log(pc.dim(${bt}  > ${`${bt}$`}{flat(item)}${bt})); }`;
-  const n2 = `        else if (nv != null) console.log(pc.dim(${bt}  > ${`${bt}$`}{pc.bold(nk)}: ${`${bt}$`}{flat(nv)}${bt}));`;
+  const n1 = "        if (Array.isArray(nv)) { for (const item of nv) console.log(pc.dim('  > ' + flat(item))); }";
+  const n2 = "        else if (nv != null) console.log(pc.dim('  > ' + pc.bold(nk) + ': ' + flat(nv)));";
   return [
     "function toTable(rows: Record<string, unknown>[], noH?: boolean, verbose?: boolean): void {",
     "  if (!rows.length) { console.log(pc.dim('(no results)')); return; }",
